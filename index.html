@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamburger Menu with Dropdown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: #764ba2;
+        }
+
+        /* Hamburger Button */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .hamburger:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 3px 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 3px;
+        }
+
+        /* Hamburger Animation */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Desktop Navigation */
+        .nav-desktop {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-desktop > li {
+            position: relative;
+        }
+
+        .nav-desktop > li > a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-desktop > li > a:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        /* Dropdown Arrow */
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-desktop > li:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Desktop Dropdown */
+        .dropdown-desktop {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-desktop > li:hover .dropdown-desktop {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-desktop li {
+            list-style: none;
+        }
+
+        .dropdown-desktop a {
+            display: block;
+            color: #333;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0.25rem;
+        }
+
+        .dropdown-desktop a:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        /* Mobile Navigation */
+        .nav-mobile {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
+            border-left: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        /* Mobile Menu Header */
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #333;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            transform: rotate(90deg);
+        }
+
+        .nav-mobile.active {
+            right: 0;
+        }
+
+        .nav-mobile ul {
+            list-style: none;
+        }
+
+        .nav-mobile > ul > li {
+            margin-bottom: 1rem;
+        }
+
+        .nav-mobile a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            display: block;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-mobile a:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            transform: translateX(10px);
+        }
+
+        /* Mobile Dropdown */
+        .mobile-dropdown-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .mobile-dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: 1rem;
+        }
+
+        .mobile-dropdown-content.active {
+            max-height: 300px;
+        }
+
+        .mobile-dropdown-content a {
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            color: #666;
+            border-left: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-dropdown-content a:hover {
+            border-left-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            color: white;
+            padding: 4rem 0;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-desktop {
+                display: none;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-mobile {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        .nav-mobile::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-mobile::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .nav-mobile::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.5);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo">Brand Logo</a>
+        
+           
+            <nav class="nav-desktop">
+                <li><a href="index.html">Home</a></li>
+      <li>
+                <a href="#">
+                    Products
+                    <span class="dropdown-arrow">▼</span>
+                </a>
+                <ul class="dropdown-desktop">
+                    <li><a href="reference.html">sen đá</a></li>
+                    <li><a href="">cấp độ</a></li>
+                    <li><a href=""></a></li>
+                    <li><a href="#">Branding</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    Services
+                    <span class="dropdown-arrow">▼</span>
+                </a>
+                <ul class="dropdown-desktop">
+                    <li><a href="#">Consulting</a></li>
+                    <li><a href="#">Development</a></li>
+                    <li><a href="tu_tien_levels.html">Support</a></li>
+                    <li><a href="#">Training</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">About</a>
+            </li>
+            <li>
+                <a href="#">Contact</a>
+            </li>
+        </nav>
+
+        <!-- Hamburger Button -->
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="nav-mobile" id="navMobile">
+        <!-- Mobile Menu Header -->
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-title">Menu</div>
+            <button class="close-btn" id="closeBtn" onclick="toggleMobileMenu()">✕</button>
+        </div>
+        
+        <ul>
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+            <li>
+                <div class="mobile-dropdown-btn" onclick="toggleMobileDropdown('products')">
+                    <span>Products</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="mobile-dropdown-content" id="products">
+                    <a href="reference.html">sen đá</a>
+                    <a href="/lever.html">cấp độ</a>
+                    <a href="#">E-commerce</a>
+                    <a href="#">Branding</a>
+                </div>
+            </li>
+            <li>
+                <div class="mobile-dropdown-btn" onclick="toggleMobileDropdown('services')">
+                    <span>Services</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="mobile-dropdown-content" id="services">
+                    <a href="#">Consulting</a>
+                    <a href="#">Development</a>
+                    <a href="#">Support</a>
+                    <a href="#">Training</a>
+                </div>
+            </li>
+            <li>
+                <a href="#">About</a>
+            </li>
+            <li>
+                <a href="#">Contact</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="hero-section">
+            <h1>cập nhật v1.0</h1>
+            <p>thêm phần sen đá </p>
+            <p>tình trạng</p>
+            <p>   -đang bốc lột A.I </p>
+        </section>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMobile = document.getElementById('navMobile');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMobileMenu() {
+            hamburger.classList.toggle('active');
+            navMobile.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            document.body.style.overflow = navMobile.classList.contains('active') ? 'hidden' : '';
+        }
+
+        hamburger.addEventListener('click', toggleMobileMenu);
+        overlay.addEventListener('click', toggleMobileMenu);
+
+        // Mobile dropdown toggle
+        function toggleMobileDropdown(id) {
+            const dropdown = document.getElementById(id);
+            const arrow = dropdown.previousElementSibling.querySelector('.dropdown-arrow');
+            
+            dropdown.classList.toggle('active');
+            arrow.style.transform = dropdown.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Close mobile menu when clicking on links
+        document.querySelectorAll('.nav-mobile a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (!link.closest('.mobile-dropdown-content')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                // Only prevent default and scroll if href is not just "#"
+                if (href && href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Close mobile menu on resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                hamburger.classList.remove('active');
+                navMobile.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Add scroll effect to header
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+    </script>
+</body>
+</html>

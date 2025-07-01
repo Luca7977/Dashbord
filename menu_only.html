@@ -1,0 +1,74 @@
+<!-- Header -->
+<header class="header">
+    <a href="#" class="logo">Brand Logo</a>
+    
+    <!-- Desktop Navigation -->
+    <nav class="nav-desktop">
+        <li><a href="index.html">Home</a></li>
+        <li>
+            <a href="#">Products <span class="dropdown-arrow">▼</span></a>
+            <ul class="dropdown-desktop">
+                <li><a href="reference.html">sen đá</a></li>
+                <li><a href="#">Mobile Apps</a></li>
+                <li><a href="#">E-commerce</a></li>
+                <li><a href="#">Branding</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Services <span class="dropdown-arrow">▼</span></a>
+            <ul class="dropdown-desktop">
+                <li><a href="#">Consulting</a></li>
+                <li><a href="#">Development</a></li>
+                <li><a href="#">Support</a></li>
+                <li><a href="#">Training</a></li>
+            </ul>
+        </li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+    </nav>
+
+    <!-- Hamburger Button -->
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<!-- Mobile Navigation -->
+<nav class="nav-mobile" id="navMobile">
+    <div class="mobile-menu-header">
+        <div class="mobile-menu-title">Menu</div>
+        <button class="close-btn" id="closeBtn" onclick="toggleMobileMenu()">✕</button>
+    </div>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li>
+            <div class="mobile-dropdown-btn" onclick="toggleMobileDropdown('products')">
+                <span>Products</span><span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="mobile-dropdown-content" id="products">
+                <a href="reference.html">Web Design</a>
+                <a href="#">Mobile Apps</a>
+                <a href="#">E-commerce</a>
+                <a href="#">Branding</a>
+            </div>
+        </li>
+        <li>
+            <div class="mobile-dropdown-btn" onclick="toggleMobileDropdown('services')">
+                <span>Services</span><span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="mobile-dropdown-content" id="services">
+                <a href="#">Consulting</a>
+                <a href="#">Development</a>
+                <a href="#">Support</a>
+                <a href="#">Training</a>
+            </div>
+        </li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>

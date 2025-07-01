@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="menu.css">
+
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Animated Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .menu-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .menu-header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .menu-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .menu-category {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-category::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .menu-category:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+        .menu-category:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .category-title {
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 2px;
+            animation: expandWidth 0.8s ease-out 0.5s both;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            transform: translateX(10px);
+            padding-left: 10px;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .menu-item:hover .item-name {
+            color: #4ecdc4;
+        }
+
+        .item-description {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+
+        .item-price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-left: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover .item-price {
+            transform: scale(1.1);
+            color: #ff5252;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-1 {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .circle-2 {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .circle-3 {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes expandWidth {
+            from {
+                width: 0;
+            }
+            to {
+                width: 50px;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                opacity: 0;
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(120deg);
+            }
+            66% {
+                transform: translateY(10px) rotate(240deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-header h1 {
+                font-size: 2.5em;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .menu-category {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="menu-placeholder"></div>
+
+      <script>
+        fetch('menu_only.html')
+          .then(response => response.text())
+          .then(data => {
+            document.getElementById('menu-placeholder').innerHTML = data;
+          })
+          .catch(err => console.error('Lỗi tải menu:', err));
+      </script>
+    
+    
+    
+    <div class="floating-elements">
+        <div class="floating-circle circle-1"></div>
+        <div class="floating-circle circle-2"></div>
+        <div class="floating-circle circle-3"></div>
+    </div>
+
+    <div class="menu-container">
+        <div class="menu-header">
+            <h1>cây trồng</h1>
+            <p>1 số loại cây trồng</p>
+        </div>
+
+
+                    <div class="menu-grid">
+                        <div class="menu-category">
+                            <h2 class="category-title">sen đá</h2>
+                            <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Sen đá thường (Succulent)</div>
+                        <div class="item-description">Lá dày, tròn hoặc nhọn, mọng nước, có màu xanh hoặc tím nhạt.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Sen đá bắp cải (Echeveria)</div>
+                        <div class="item-description">Lá xếp thành rosette như bông hoa bắp cải, màu xanh hoặc hồng nhạt.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Sen đá ngọc bích (Crassula ovata)</div>
+                        <div class="item-description">Lá tròn, dày, xanh bóng, dễ chăm, thân cứng.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+            </div>
+
+            <div class="menu-category">
+                <h2 class="category-title">Xương rồng</h2>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Xương rồng tai thỏ (Opuntia)</div>
+                        <div class="item-description">Thân dẹt, nhiều gai nhỏ, hình tai thỏ đặc trưng.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Xương rồng bát tiên</div>
+                        <div class="item-description">Thân trụ thẳng, có nhiều gai to, màu xanh đậm</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Xương rồng trứng (Echinocactus)
+
+</div>
+                        <div class="item-description">Hình cầu, có gai cứng bao phủ toàn thân, thường mọc đơn.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+            </div>
+
+            <div class="menu-category">
+                <h2 class="category-title">Thanh sơn tùng</h2>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Thanh sơn tùng tròn</div>
+                        <div class="item-description">Lá tròn, dày, xanh đậm, bóng và mọng nước.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Peperomia dưa hấu</div>
+                        <div class="item-description">Lá tròn như lát dưa hấu, có sọc xanh trắng rất đẹp</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Thanh sơn tùng vân nhăn</div>
+                        <div class="item-description">Lá nhỏ, gân lá nổi rõ, có màu xanh hoặc đỏ, bề mặt hơi nhăn.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+            </div>
+
+            <div class="menu-category">
+                <h2 class="category-title">khác </h2>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Cây đá Nhật</div>
+                        <div class="item-description">Lá nhỏ, mọng nước, hình hạt đậu, mọc thành chùm dài như đuôi lừa, rất đẹp khi treo.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Cây xương cá</div>
+                        <div class="item-description">Thân có nhiều khía và gai, hình dáng như cá, màu xanh nhạt hoặc trắng pha xanh.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <div class="item-name">Cây đuôi công mọng nước</div>
+                        <div class="item-description">Lá dài, thuôn nhọn, mọng nước, màu xanh lục đậm, trồng làm thảm hoặc chậu treo rất đẹp.</div>
+                    </div>
+                    <div class="item-price"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add staggered animation delays to menu items
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const categories = document.querySelectorAll('.menu-category');
+
+            // Stagger category animations
+            categories.forEach((category, index) => {
+                category.style.animationDelay = `${index * 0.2}s`;
+            });
+
+            // Add scroll-triggered animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Add hover sound effects (visual feedback)
+            menuItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+            });
+
+            // Add click effects to menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.transform = 'translateX(10px) scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateX(10px) scale(1)';
+                    }, 150);
+                });
+            });
+
+            // Parallax effect for floating elements
+            document.addEventListener('mousemove', function(e) {
+                const circles = document.querySelectorAll('.floating-circle');
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+
+                circles.forEach((circle, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const x = (mouseX - 0.5) * speed * 20;
+                    const y = (mouseY - 0.5) * speed * 20;
+
+                    circle.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+        });
+    </script>
+    <script>
+    fetch('menu_only.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('menu-placeholder').innerHTML = html;
+
+        const script = document.createElement('script');
+        script.src = 'menu.js';
+        document.body.appendChild(script);
+      });
+    </script>
+
+
+</body>
+</html>
